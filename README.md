@@ -25,22 +25,22 @@ Modern Large Language Models like DeepSeek R1 build upon the transformer archite
 Large Language Models follow a layered architecture where information flows through a series of identical but independently parameterized blocks:
 
     ┌─────────────────────────────────────────────┐
-    │                  INPUT TEXT                  │
+    │                  INPUT TEXT                 │
     └───────────────────┬─────────────────────────┘
                         ▼
     ┌─────────────────────────────────────────────┐
-    │               TOKENIZATION                   │
-    │  (Convert text to token IDs from vocabulary) │
+    │               TOKENIZATION                  │
+    │  (Convert text to token IDs from vocabulary)│
     └───────────────────┬─────────────────────────┘
                         ▼
     ┌─────────────────────────────────────────────┐
-    │             TOKEN EMBEDDINGS                 │
-    │    (Convert token IDs to vector space)       │
+    │             TOKEN EMBEDDINGS                │
+    │    (Convert token IDs to vector space)      │
     └───────────────────┬─────────────────────────┘
                         ▼
     ┌─────────────────────────────────────────────┐
     │        POSITIONAL ENCODINGS/RoPE            │
-    │      (Add position information)              │
+    │      (Add position information)             │
     └───────────────────┬─────────────────────────┘
                         ▼
     ┌─────────────────────────────────────────────┐
@@ -49,24 +49,24 @@ Large Language Models follow a layered architecture where information flows thro
     │  ┌───────────────────────────────────────┐  │
     │  │         PRE-NORMALIZATION             │  │
     │  └─────────────────┬─────────────────────┘  │
-    │                    ▼                         │
+    │                    ▼                        │
     │  ┌───────────────────────────────────────┐  │
     │  │       MULTI-HEAD ATTENTION            │  │
     │  └─────────────────┬─────────────────────┘  │
-    │                    ▼                         │
+    │                    ▼                        │
     │  ┌───────────────────────────────────────┐  │
     │  │         RESIDUAL CONNECTION           │  │
     │  └─────────────────┬─────────────────────┘  │
-    │                    ▼                         │
+    │                    ▼                        │
     │  ┌───────────────────────────────────────┐  │
     │  │         PRE-NORMALIZATION             │  │
     │  └─────────────────┬─────────────────────┘  │
-    │                    ▼                         │
+    │                    ▼                        │
     │  ┌───────────────────────────────────────┐  │
     │  │       FEED-FORWARD NETWORK            │  │
     │  │       (OR MIXTURE OF EXPERTS)         │  │
     │  └─────────────────┬─────────────────────┘  │
-    │                    ▼                         │
+    │                    ▼                        │
     │  ┌───────────────────────────────────────┐  │
     │  │         RESIDUAL CONNECTION           │  │
     │  └─────────────────┬─────────────────────┘  │
@@ -84,8 +84,8 @@ Large Language Models follow a layered architecture where information flows thro
     └───────────────────┬─────────────────────────┘
                         ▼
     ┌─────────────────────────────────────────────┐
-    │                SOFTMAX                       │
-    │    (Convert to probability distribution)     │
+    │                SOFTMAX                      │
+    │    (Convert to probability distribution)    │
     └───────────────────┬─────────────────────────┘
                         ▼
     ┌─────────────────────────────────────────────┐
@@ -112,18 +112,18 @@ While the general architecture remains the same, the operation flow differs sign
 
 > **Training Flow (Simplified):**
 >
->     ┌────────────────────┐         ┌───────────────────┐
->     │  Training Corpus   │         │  Loss Function    │
->     │  (Input Sequences) │         │  (Next Token      │
->     └─────────┬──────────┘         │   Prediction)     │
->             │                    └─────────┬─────────┘
->             ▼                              │
+>     ┌────────────────────┐         ┌──────────────────┐
+>     │  Training Corpus   │         │  Loss Function   │
+>     │  (Input Sequences) │         │  (Next Token     │
+>     └─────────┬──────────┘         │   Prediction)    │
+>               │                    └────────┬─────────┘
+>               ▼                             │
 >     ┌────────────────────┐                  │
 >     │ Forward Pass       │                  │
 >     │ Through All Layers │                  │
 >     └─────────┬──────────┘                  │
->             │                             │
->             ▼                             │
+>               │                             │
+>               ▼                             │
 >     ┌────────────────────┐                  │
 >     │ Prediction         │                  │
 >     │ (Output Logits)    ├─────────────────►│
@@ -134,8 +134,8 @@ While the general architecture remains the same, the operation flow differs sign
 >     │ Backward Pass      │◄────────┤ Compute Loss      │
 >     │ (Update Weights)   │         │ (Compare with     │
 >     └─────────┬──────────┘         │  Actual Tokens)   │
->             │                    └───────────────────┘
->             ▼
+>               │                    └───────────────────┘
+>               ▼
 >     ┌────────────────────┐
 >     │ Optimizer Step     │
 >     │ (Apply Weight      │
@@ -147,20 +147,20 @@ While the general architecture remains the same, the operation flow differs sign
 >     ┌────────────────────┐
 >     │ Input Prompt       │
 >     └─────────┬──────────┘
->             │
->             ▼
+>               │
+>               ▼
 >     ┌────────────────────────────────────────┐
 >     │ Process All Prompt Tokens              │
 >     │ (Full Forward Pass, Cache K,V Vectors) │
 >     └─────────┬──────────────────────────────┘
->             │
->             ▼
+>               │
+>               ▼
 >     ┌────────────────────┐
 >     │ Generate First     │
 >     │ Output Token       │
 >     └─────────┬──────────┘
->             │
->             ▼
+>               │
+>               ▼
 >     ┌────────────────────────────────────────┐
 >     │ For Each New Token:                    │
 >     ├────────────────────────────────────────┤
@@ -174,8 +174,8 @@ While the general architecture remains the same, the operation flow differs sign
 >     │ 3. Project to Vocabulary               │
 >     │ 4. Sample Next Token                   │
 >     └─────────┬──────────────────────────────┘
->             │
->             ▼
+>               │
+>               ▼
 >     ┌────────────────────┐
 >     │ Repeat Until       │
 >     │ Completion         │
